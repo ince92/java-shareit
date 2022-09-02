@@ -27,7 +27,7 @@ public class BookingServiceImpl implements BookingService {
     private final ItemRepository itemRepository;
 
     @Override
-    public BookingDtoOut create(BookingDto bookingDto, Long bookerId) {
+    public BookingDtoOut create(BookingDto bookingDto, long bookerId) {
         User booker = userRepository.findById(bookerId).orElseThrow(() ->
                 new NotFoundException("Пользователь с таким id не найден!"));
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() ->
@@ -49,7 +49,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDtoOut bookingApproving(Long bookingId, Long userId, Boolean approved) {
+    public BookingDtoOut bookingApproving(long bookingId, long userId, Boolean approved) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new NotFoundException("Букинг с таким id не найден!"));
 
@@ -76,7 +76,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDtoOut getBookingById(Long bookingId, Long userId) {
+    public BookingDtoOut getBookingById(long bookingId, long userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь с таким id не найден!");
         }
@@ -91,7 +91,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoOut> getBookingList(Long userId, String state) {
+    public List<BookingDtoOut> getBookingList(long userId, String state) {
 
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь с таким id не найден!");
@@ -133,7 +133,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoOut> getOwnerBookingList(Long userId, String state) {
+    public List<BookingDtoOut> getOwnerBookingList(long userId, String state) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь с таким id не найден!");
         }
