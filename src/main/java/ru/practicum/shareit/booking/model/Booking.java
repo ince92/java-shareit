@@ -12,24 +12,24 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @Entity
-@Table(name = "BOOKINGS")
+@Table(name = "bookings")
 @NoArgsConstructor
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "BOOKING_ID")
+    @Column(name = "booking_id")
     private Long id;
-    @Column(name = "BOOKING_START_DATE")
+    @Column(name = "booking_start_date")
     private LocalDateTime start;
-    @Column(name = "BOOKING_END_DATE")
+    @Column(name = "booking_end_date")
     private LocalDateTime end;
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "BOOKING_ITEM_ID")
+    @JoinColumn(name = "booking_item_id")
     private Item item;
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "BOOKING_BOOKER_ID")
+    @JoinColumn(name = "booking_booker_id")
     private User booker;
     @Enumerated(EnumType.STRING)
-    @Column(name = "BOOKING_STATUS")
+    @Column(name = "booking_status")
     private BookingStatus status;
 }

@@ -6,9 +6,6 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
-/**
- * // TODO .
- */
 public class ItemRequestDto {
     private long id;
     @NotBlank(groups = {Create.class})

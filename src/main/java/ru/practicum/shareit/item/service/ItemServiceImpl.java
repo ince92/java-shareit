@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.comments.model.Comment;
-import ru.practicum.shareit.comments.repository.CommentRepository;
-import ru.practicum.shareit.comments.dto.CommentDto;
-import ru.practicum.shareit.comments.dto.CommentDtoOut;
-import ru.practicum.shareit.comments.dto.CommentMapper;
+import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.repository.CommentRepository;
+import ru.practicum.shareit.item.dto.CommentRequestDto;
+import ru.practicum.shareit.item.dto.CommentResponseDto;
+import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -102,17 +101,15 @@ public class ItemServiceImpl implements ItemService {
             }
         }
 
-        List<CommentDtoOut> commentList = commentRepository.findAllByItemId(item.getId()).stream()
+        List<CommentResponseDto> commentList = commentRepository.findAllByItemId(item.getId()).stream()
                 .map(CommentMapper::toCommentDtoOut).collect(Collectors.toList());
 
-        return ItemMapper.toItemDtoWithBookingDates(item,
-                current != null ? BookingMapper.toBookingDtoLess(current) : null,
-                next != null ? BookingMapper.toBookingDtoLess(next) : null, commentList);
+        return ItemMapper.toItemDtoWithBookingDates(item, current, next, commentList);
 
 
     }
 
-    public CommentDtoOut addComment(CommentDto comment) {
+    public CommentResponseDto addComment(CommentRequestDto comment) {
         User author = userRepository.findById(comment.getAuthorId()).orElseThrow(() ->
                 new NotFoundException("Пользователь с таким id не найден!"));
         Item item = itemRepository.findById(comment.getItemId()).orElseThrow(() ->

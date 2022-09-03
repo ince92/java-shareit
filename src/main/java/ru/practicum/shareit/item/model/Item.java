@@ -12,22 +12,22 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "ITEMS")
+@Table(name = "items")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ITEM_ID")
+    @Column(name = "item_id")
     private Long id;
-    @Column(name = "ITEM_NAME")
+    @Column(name = "item_name")
     private String name;
-    @Column(name = "ITEM_DESCRIPTION")
+    @Column(name = "item_description")
     private String description;
-    @Column(name = "ITEM_IS_AVAILABLE")
+    @Column(name = "item_is_available")
     private Boolean available;
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "ITEM_OWNER_ID")
+    @JoinColumn(name = "item_owner_id")
     private User owner;
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "ITEM_REQUEST_ID")
+    @JoinColumn(name = "item_request_id")
     private ItemRequest request;
 }
