@@ -6,9 +6,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Create;
 import ru.practicum.shareit.Update;
+import ru.practicum.shareit.item.dto.CommentRequestDto;
+import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithBookingDates;
 import ru.practicum.shareit.item.service.ItemService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +41,13 @@ public class ItemController {
     }
 
     @GetMapping(value = "/{itemId}")
-    public ItemDto findItemById(@PathVariable("itemId") long itemId) {
-        return itemService.findItemById(itemId);
+    public ItemDtoWithBookingDates findItemById(@PathVariable("itemId") long itemId,
+                                                @RequestHeader("X-Sharer-User-Id") long userId) {
+        return itemService.findItemById(itemId, userId);
     }
 
     @GetMapping()
-    public List<ItemDto> findOwnersItems(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemDtoWithBookingDates> findOwnersItems(@RequestHeader("X-Sharer-User-Id") long userId) {
         return itemService.findOwnersItems(userId);
     }
 
@@ -53,5 +58,17 @@ public class ItemController {
             return new ArrayList<>();
         }
         return itemService.findAvailableItems(text.toLowerCase());
+    }
+
+    @PostMapping(value = "/{itemId}/comment")
+    public CommentResponseDto addComment(@RequestHeader("X-Sharer-User-Id") long userId,
+                                         @Validated({Create.class}) @RequestBody CommentRequestDto comment,
+                                         @PathVariable("itemId") long itemId) {
+        comment.setCreated(LocalDateTime.now());
+        comment.setItemId(itemId);
+        comment.setAuthorId(userId);
+        CommentResponseDto newComment = itemService.addComment(comment);
+        log.info("Добавлен комментарий - {}", newComment.getId());
+        return newComment;
     }
 }
