@@ -60,7 +60,7 @@ class ItemRepositoryTest {
 
     @Test
     void findOwnersItemsTest() {
-        final List<Item> itemList = itemRepository.findOwnersItems(item1.getId(), Pageable.unpaged());
+        final List<Item> itemList = itemRepository.findOwnersItems(user1.getId(), Pageable.ofSize(5));
         assertEquals(1, itemList.size());
         assertEquals(item1.getId(), itemList.get(0).getId());
         assertEquals(item1.getName(), itemList.get(0).getName());
