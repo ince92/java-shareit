@@ -47,7 +47,7 @@ class ItemRequestRepositoryTest {
 
     @Test
     void findItemRequestByRequesterIdTest() {
-        final List<ItemRequest> requestList = itemRequestRepository.findItemRequestByRequesterId(user3.getId());
+        final List<ItemRequest> requestList = itemRequestRepository.findItemRequestByRequesterIdOrderByCreatedDesc(user3.getId());
         assertEquals(1, requestList.size());
         assertEquals(request2.getId(), requestList.get(0).getId());
         assertEquals(request2.getDescription(), requestList.get(0).getDescription());

@@ -24,7 +24,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     private final ItemRequestRepository itemRequestRepository;
     private final ItemRepository itemRepository;
-
     private final UserRepository userRepository;
 
     public ItemRequestDto create(ItemRequestDto itemRequest) {
@@ -38,7 +37,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequestDtoResponse> findItemRequestsByRequester(long userId) {
         User requester = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("Пользователь с таким id не найден!"));
-        List<ItemRequest> requestsList = itemRequestRepository.findItemRequestByRequesterId(requester.getId());
+        List<ItemRequest> requestsList = itemRequestRepository.findItemRequestByRequesterIdOrderByCreatedDesc(requester.getId());
         return getItemRequestList(requestsList);
     }
 

@@ -60,7 +60,7 @@ class ItemRequestServiceImplTest {
         ItemRequestDto request = new ItemRequestDto(1L, "text", user.getId(), LocalDateTime.now());
         Item item = new Item(1L, "item", "description", true, owner, ItemRequestMapper
                 .toItemRequest(request, user));
-        when(itemRequestRepository.findItemRequestByRequesterId(anyLong())).thenReturn(List.of(ItemRequestMapper
+        when(itemRequestRepository.findItemRequestByRequesterIdOrderByCreatedDesc(anyLong())).thenReturn(List.of(ItemRequestMapper
                 .toItemRequest(request, user)));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(itemRepository.findItemsByRequestId(anyLong())).thenReturn(List.of(item));
