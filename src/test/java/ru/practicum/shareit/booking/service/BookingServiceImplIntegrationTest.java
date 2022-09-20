@@ -36,7 +36,7 @@ class BookingServiceImplIntegrationTest {
     @Test
     void createTest() {
         User user = userRepository.save(new User(1L, "name1", "email1@mail"));
-        User booker = userRepository.save(new User(2L, "booker", "booker@mail"));
+        User booker = userRepository.save(new User(30L, "booker", "booker@mail"));
         Item item = itemRepository.save(new Item(1L, "username1", "description1", true,
                 user, null));
         BookingRequestDto bookingDto = makeBookingDto(LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2),
