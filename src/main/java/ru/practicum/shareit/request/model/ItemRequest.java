@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,17 +15,17 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "REQUESTS")
+@Table(name = "requests")
 public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "REQUEST_ID")
+    @Column(name = "request_id")
     private long id;
-    @Column(name = "REQUEST_DESCRIPTION")
+    @Column(name = "request_description")
     private String description;
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "REQUEST_REQUESTER_ID")
+    @JoinColumn(name = "request_requester_id")
     private User requester;
-    @Column(name = "REQUEST_CREATE_DATE")
+    @Column(name = "request_create_date")
     private LocalDateTime created;
 }

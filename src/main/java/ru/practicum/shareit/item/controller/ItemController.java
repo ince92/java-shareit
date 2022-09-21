@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.Create;
@@ -12,6 +13,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithBookingDates;
 import ru.practicum.shareit.item.service.ItemService;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/items")
 @RequiredArgsConstructor
+@Validated
 public class ItemController {
     private final ItemService itemService;
 
@@ -47,17 +51,24 @@ public class ItemController {
     }
 
     @GetMapping()
-    public List<ItemDtoWithBookingDates> findOwnersItems(@RequestHeader("X-Sharer-User-Id") long userId) {
-        return itemService.findOwnersItems(userId);
+    public List<ItemDtoWithBookingDates> findOwnersItems(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                         @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                         @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        int page = from / size;
+        final PageRequest pageRequest = PageRequest.of(page, size);
+        return itemService.findOwnersItems(userId, pageRequest);
     }
 
     @GetMapping(value = "/search")
-    public List<ItemDto> findAvailableItems(@RequestParam(name = "text")
-                                            String text) {
+    public List<ItemDto> findAvailableItems(@RequestParam(name = "text") String text,
+                                            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         if (text.isBlank()) {
             return new ArrayList<>();
         }
-        return itemService.findAvailableItems(text.toLowerCase());
+        int page = from / size;
+        final PageRequest pageRequest = PageRequest.of(page, size);
+        return itemService.findAvailableItems(text.toLowerCase(),pageRequest);
     }
 
     @PostMapping(value = "/{itemId}/comment")

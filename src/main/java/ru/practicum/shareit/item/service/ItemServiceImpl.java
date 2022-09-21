@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -16,6 +17,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithBookingDates;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
@@ -32,11 +35,18 @@ public class ItemServiceImpl implements ItemService {
 
     private final CommentRepository commentRepository;
 
+    private final ItemRequestRepository itemRequestRepository;
+
     @Override
     public ItemDto create(ItemDto item, long userId) {
         User owner = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("Пользователь с таким id не найден!"));
-        Item newItem = ItemMapper.toItem(item, owner);
+        ItemRequest request = null;
+        if (item.getRequestId() != null) {
+            request = itemRequestRepository.findById(item.getRequestId()).orElseThrow(() ->
+                    new NotFoundException("Запрос с таким id не найден!"));
+        }
+        Item newItem = ItemMapper.toItem(item, owner, request);
         return ItemMapper.toItemDto(itemRepository.save(newItem));
     }
 
@@ -69,14 +79,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDtoWithBookingDates> findOwnersItems(long userId) {
-        return itemRepository.findOwnersItems(userId).stream().map(i -> convertItem(i, userId))
+    public List<ItemDtoWithBookingDates> findOwnersItems(long userId, Pageable pageRequest) {
+        return itemRepository.findOwnersItems(userId, pageRequest).stream().map(i -> convertItem(i, userId))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ItemDto> findAvailableItems(String text) {
-        return itemRepository.findAvailableItems(text).stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+    public List<ItemDto> findAvailableItems(String text, Pageable pageRequest) {
+        return itemRepository.findAvailableItems(text, pageRequest).stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 
     private ItemDtoWithBookingDates convertItem(Item item, long userId) {
