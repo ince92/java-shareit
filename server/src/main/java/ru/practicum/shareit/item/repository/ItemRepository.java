@@ -12,7 +12,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findById(Long id);
 
     @Query(" select i from Item i " +
-            "where i.owner.id =  ?1")
+            "where i.owner.id =  ?1 order by i.id")
     List<Item> findOwnersItems(long userId, Pageable pageRequest);
 
     @Query(" select i from Item i " +
